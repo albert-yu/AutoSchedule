@@ -1,6 +1,7 @@
 package com.opencsv;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -19,6 +20,12 @@ public class AutoSchedule
     */
    private static ArrayList<Student> students;
    
+   /**
+    * Take a string with commas and spaces in it and returns a list of the
+    * separated components.
+    * @param str, a string in the format 'xxx, xxxx, xxxx'
+    * @return separated, an ArrayList<String>
+    */
    private static ArrayList<String> separateByCommas(String str)
    {
       ArrayList<String> separated = new ArrayList<String>();
@@ -42,6 +49,28 @@ public class AutoSchedule
       }
       separated.add(currentWord.toString());
       return separated;
+   }
+   
+   /**
+    * Creates the master schedule which will follow the formatting:
+    * Outer key: 'Mon'
+    * Inner key: '9 - 9:50 AM'
+    * Value: empty ArrayList
+    * @return masterSched, a HashMap2D
+    */
+   private HashMap2D<String, ArrayList<String>> createMasterSched()
+   {
+      HashMap2D<String, ArrayList<String>> masterSched = new HashMap2D<String, ArrayList<String>>();
+      ArrayList<String> emptyArrayList = new ArrayList<String>();
+      for (int i = 0; i < Schedule.weekdays.length; i++)
+      {
+         masterSched.put(Schedule.weekdays[i]);
+         for (int j = 0; j < Schedule.listOfTimes.length; j++)
+         {
+            masterSched.put(Schedule.weekdays[i], Schedule.listOfTimes[j], emptyArrayList);
+         }
+      }
+      return masterSched;
    }
    
    public static void main(String[] args)
