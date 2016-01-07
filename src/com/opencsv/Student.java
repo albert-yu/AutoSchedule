@@ -9,7 +9,7 @@ public class Student
 {
    
    private String name;
-   private Schedule schedule;
+   public Schedule schedule;
 
    
    public Student(String fullName, Schedule sched)

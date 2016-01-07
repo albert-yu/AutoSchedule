@@ -124,9 +124,16 @@ public class AutoSchedule
       {
          sched.put(Schedule.indexToWeekday.get(i));
          ArrayList<String> timesAvail = separateByCommas(row[i]);
-         for (int j = 0; j < timesAvail.size(); j++)
+         for (int j = 0; j < Schedule.listOfTimes.length; j++)
          {
-            sched.put(Schedule.indexToWeekday.get(i), timesAvail.get(j), true);
+            if (timesAvail.contains(Schedule.listOfTimes[j]))
+            {
+               sched.put(Schedule.indexToWeekday.get(i), Schedule.listOfTimes[j], true);
+            }
+            else
+            {
+               sched.put(Schedule.indexToWeekday.get(i), Schedule.listOfTimes[j], false);
+            }
          }
       }
       
@@ -142,7 +149,9 @@ public class AutoSchedule
       //Skip first row, which contains the column headings
       for (int i = 1; i < storedSched.size(); i++)
       {
-         Student student = new Student(storedSched.get(i)[1], csvRowToScheduleObj(storedSched.get(i)));
+         Schedule studentSched = csvRowToScheduleObj(storedSched.get(i));
+         //System.out.println(storedSched.get(i)[1]);
+         Student student = new Student(storedSched.get(i)[1], studentSched);
          
          //Loop over weekdays and times to find out which students are available
          //at a given (weekday, time slot) pair
@@ -150,7 +159,7 @@ public class AutoSchedule
          {
             for (int k = 0; k < Schedule.listOfTimes.length; k++)
             {
-               if (student.getSchedule().get(Schedule.weekdays[j], Schedule.listOfTimes[k]) == true)
+               if (student.schedule.get(Schedule.weekdays[j], Schedule.listOfTimes[k]) == true)
                {
                   masterSched.get(Schedule.weekdays[j], Schedule.listOfTimes[k]).add(student.getName());
                }

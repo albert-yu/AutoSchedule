@@ -17,8 +17,8 @@ public class Schedule extends HashMap2D<String, Boolean>
    /**
     * The list of hours
     */
-   public static String[] listOfTimes = {"9 - 9:50 AM", "10 - 10:50 AM", "11 - 11:50 AM", "12 - 12:50 AM", "1 - 1:50 AM", "2 - 2:50 AM",
-         "3 - 3:50 AM", "4 - 4:50 AM"};
+   public static String[] listOfTimes = {"9 - 9:50 AM", "10 - 10:50 AM", "11 - 11:50 AM", "12 - 12:50 PM", "1 - 1:50 PM", "2 - 2:50 PM",
+         "3 - 3:50 PM", "4 - 4:50 PM"};
    
    private HashMap2D<String, Boolean> schedule;
    
