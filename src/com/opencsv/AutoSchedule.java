@@ -41,7 +41,7 @@ public class AutoSchedule
             i++;
          }
       }
-      separated.add(currentWord.toString());
+      separated.add(currentWord.append(str.charAt(i)).toString());
       return separated;
    }
    
