@@ -19,8 +19,8 @@ public class Student
    }
    
    /**
-    * Returns a concatenation of the first and last names of the student.
-    * @return a string with the first and last names separated by a space
+    * Returns the name of the student
+    * @return name, a string 
     */
    public String getName()
    {

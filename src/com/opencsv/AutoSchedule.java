@@ -51,19 +51,20 @@ public class AutoSchedule
     * Outer key: 'Mon'
     * Inner key: '9 - 9:50 AM'
     * Value: empty ArrayList
-    * NOTE: This is NOT the same thing as a Schedule object, where the key 
+    * NOTE: This is NOT the same thing as a Schedule object, where the value 
     * is a boolean, not ArrayList.
     * @return masterSched, a HashMap2D
     */
    private static HashMap2D<String, ArrayList<String>> createMasterSched()
    {
       HashMap2D<String, ArrayList<String>> masterSched = new HashMap2D<String, ArrayList<String>>();
-      ArrayList<String> emptyArrayList = new ArrayList<String>();
+      
       for (int i = 0; i < Schedule.weekdays.length; i++)
       {
          masterSched.put(Schedule.weekdays[i]);
          for (int j = 0; j < Schedule.listOfTimes.length; j++)
          {
+            ArrayList<String> emptyArrayList = new ArrayList<String>();
             masterSched.put(Schedule.weekdays[i], Schedule.listOfTimes[j], emptyArrayList);
          }
       }
@@ -150,7 +151,6 @@ public class AutoSchedule
       for (int i = 1; i < storedSched.size(); i++)
       {
          Schedule studentSched = csvRowToScheduleObj(storedSched.get(i));
-         //System.out.println(storedSched.get(i)[1]);
          Student student = new Student(storedSched.get(i)[1], studentSched);
          
          //Loop over weekdays and times to find out which students are available
@@ -162,12 +162,15 @@ public class AutoSchedule
                if (student.schedule.get(Schedule.weekdays[j], Schedule.listOfTimes[k]) == true)
                {
                   masterSched.get(Schedule.weekdays[j], Schedule.listOfTimes[k]).add(student.getName());
+                  //System.out.println(Schedule.weekdays[j]);
+                  //System.out.println(Schedule.listOfTimes[k]);
+                  //System.out.println(masterSched.get(Schedule.weekdays[j], Schedule.listOfTimes[k]));
                }
 
             }
          }
       }
-      
+
       for (int i = 0; i < Schedule.weekdays.length; i++)
       {
          System.out.println(Schedule.weekdays[i] + ": ");
@@ -178,6 +181,7 @@ public class AutoSchedule
             System.out.println();
          }
       }
+
       
       
    }
