@@ -8,17 +8,14 @@ package com.opencsv;
 public class Student
 {
    
-   private String firstName;
-   private String lastName;
+   private String name;
    private Schedule schedule;
 
    
-   public Student(String first, String last)
+   public Student(String fullName, Schedule sched)
    {
-      firstName = first;
-      lastName = last;
-      schedule = new Schedule();
-      
+      name = fullName;
+      schedule = sched;
    }
    
    /**
@@ -27,7 +24,7 @@ public class Student
     */
    public String getName()
    {
-      return firstName + " " + lastName;
+      return name;
    }
    
    /**

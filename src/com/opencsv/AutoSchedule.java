@@ -1,7 +1,6 @@
 package com.opencsv;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -16,11 +15,6 @@ public class AutoSchedule
 {
    
    /**
-    * The students in a given section
-    */
-   private static ArrayList<Student> students;
-   
-   /**
     * Take a string with commas and spaces in it and returns a list of the
     * separated components.
     * @param str, a string in the format 'xxx, xxxx, xxxx'
@@ -31,7 +25,7 @@ public class AutoSchedule
       ArrayList<String> separated = new ArrayList<String>();
       StringBuilder currentWord = new StringBuilder();
       int i =0;
-      while (i < str.length())
+      while (i < str.length() - 1)
       {
          String temp = new StringBuilder().append(str.charAt(i)).append(str.charAt(i + 1)).toString();
          if (temp.equals(", "))
@@ -51,14 +45,17 @@ public class AutoSchedule
       return separated;
    }
    
+   
    /**
     * Creates the master schedule which will follow the formatting:
     * Outer key: 'Mon'
     * Inner key: '9 - 9:50 AM'
     * Value: empty ArrayList
+    * NOTE: This is NOT the same thing as a Schedule object, where the key 
+    * is a boolean, not ArrayList.
     * @return masterSched, a HashMap2D
     */
-   private HashMap2D<String, ArrayList<String>> createMasterSched()
+   private static HashMap2D<String, ArrayList<String>> createMasterSched()
    {
       HashMap2D<String, ArrayList<String>> masterSched = new HashMap2D<String, ArrayList<String>>();
       ArrayList<String> emptyArrayList = new ArrayList<String>();
@@ -73,39 +70,106 @@ public class AutoSchedule
       return masterSched;
    }
    
-   public static void main(String[] args)
+   
+   /**
+    * Stores the rows of the csv file in an ArrayList
+    * @param csvFileName, the string containing the name of the csv file
+    * @return allRows, an ArrayList containing the rows of csv file
+    */
+   private static ArrayList<String[]> storeSchedule(String csvFileName)
    {
+      ArrayList<String[]> allRows = new ArrayList<String[]>();
       CSVReader reader = null;
       try
       {
-          //Get the CSVReader instance with specifying the delimiter to be used
-          reader = new CSVReader(new FileReader("sample.csv"),',');
-          String [] nextLine;
-          //Read one line at a time
-          while ((nextLine = reader.readNext()) != null)
-          {
-              for(String token : nextLine)
-              {
-                  //Print all tokens
-                  System.out.println(token);
-              }
-          }
+         //Get the CSVReader instance with specifying the delimiter to be used
+         reader = new CSVReader(new FileReader(csvFileName),',');
+         String [] nextLine;
+         //Read one line at a time
+         while ((nextLine = reader.readNext()) != null)
+         {
+            //System.out.println(nextLine[0]);
+            allRows.add(nextLine);
+         }
       }
       catch (Exception e) 
       {
-          e.printStackTrace();
+         e.printStackTrace();
       }
       finally 
       {
-          try 
-          {
-              reader.close();
-          } 
-          catch (IOException e) 
-          {
-              e.printStackTrace();
-          }
+         try 
+         {
+            reader.close();
+         } 
+         catch (IOException e) 
+         {
+            e.printStackTrace();
+         }
       }
+      
+      return allRows;
+   }
+   
+   /**
+    * Uses information from a csv row to create a Schedule object
+    * @param row
+    * @return sched, a Schedule object
+    */
+   private static Schedule csvRowToScheduleObj(String[] row)
+   {
+      Schedule sched = new Schedule();
+      
+      for (int i = 3; i < row.length; i++)
+      {
+         sched.put(Schedule.indexToWeekday.get(i));
+         ArrayList<String> timesAvail = separateByCommas(row[i]);
+         for (int j = 0; j < timesAvail.size(); j++)
+         {
+            sched.put(Schedule.indexToWeekday.get(i), timesAvail.get(j), true);
+         }
+      }
+      
+      return sched;
+   }
+   
+   
+   public static void main(String[] args)
+   {
+      HashMap2D<String, ArrayList<String>> masterSched = createMasterSched();
+      ArrayList<String[]> storedSched = storeSchedule("sample.csv");
+      
+      //Skip first row, which contains the column headings
+      for (int i = 1; i < storedSched.size(); i++)
+      {
+         Student student = new Student(storedSched.get(i)[1], csvRowToScheduleObj(storedSched.get(i)));
+         
+         //Loop over weekdays and times to find out which students are available
+         //at a given (weekday, time slot) pair
+         for (int j = 0; j < Schedule.weekdays.length; j++)
+         {
+            for (int k = 0; k < Schedule.listOfTimes.length; k++)
+            {
+               if (student.getSchedule().get(Schedule.weekdays[j], Schedule.listOfTimes[k]) == true)
+               {
+                  masterSched.get(Schedule.weekdays[j], Schedule.listOfTimes[k]).add(student.getName());
+               }
+
+            }
+         }
+      }
+      
+      for (int i = 0; i < Schedule.weekdays.length; i++)
+      {
+         System.out.println(Schedule.weekdays[i] + ": ");
+         for (int j = 0; j < Schedule.listOfTimes.length; j++)
+         {
+            System.out.println("Students available at " + Schedule.listOfTimes[j]);
+            System.out.println(masterSched.get(Schedule.weekdays[i], Schedule.listOfTimes[j]));
+            System.out.println();
+         }
+      }
+      
       
    }
    

@@ -15,10 +15,16 @@ import java.util.HashMap;
 
 public class HashMap2D<E, F>
 {
+
    /**
     * The outer map
     */
    private HashMap<E, HashMap<E, F>> outerMap;
+   
+   /**
+    * The size of the outer map
+    */
+   private int size;
    
    /**
     * Constructor for HashMap just creates outer map.
@@ -34,6 +40,7 @@ public class HashMap2D<E, F>
    public void clear()
    {
       outerMap = new HashMap<E, HashMap<E, F>>();
+      size = 0;
    }
    
    /**
@@ -57,6 +64,7 @@ public class HashMap2D<E, F>
    {
       HashMap<E, F> innerMap = new HashMap<E, F>();
       outerMap.put(key, innerMap);
+      size ++;
    }
    
    /**
@@ -99,6 +107,12 @@ public class HashMap2D<E, F>
    public void remove(E key)
    {
       outerMap.remove(key);
+      size--;
+   }
+   
+   public int size()
+   {
+      return size;
    }
    
 }
