@@ -83,13 +83,12 @@ public class AutoSchedule
       CSVReader reader = null;
       try
       {
-         //Get the CSVReader instance with specifying the delimiter to be used
+         // Get the CSVReader instance with specifying the delimiter to be used
          reader = new CSVReader(new FileReader(csvFileName),',');
          String [] nextLine;
-         //Read one line at a time
+         // Read one line at a time
          while ((nextLine = reader.readNext()) != null)
          {
-            //System.out.println(nextLine[0]);
             allRows.add(nextLine);
          }
       }
@@ -142,19 +141,24 @@ public class AutoSchedule
    }
    
    
-   public static void main(String[] args)
+   /**
+    * Fills out the empty master schedule and returns it
+    * @param csvFileName
+    * @return masterSched, the master schedule
+    */
+   private static HashMap2D<String, ArrayList<String>> fillMasterSched(String csvFileName)
    {
       HashMap2D<String, ArrayList<String>> masterSched = createMasterSched();
-      ArrayList<String[]> storedSched = storeSchedule("sample.csv");
+      ArrayList<String[]> storedSched = storeSchedule(csvFileName);
       
-      //Skip first row, which contains the column headings
+      // Skip first row, which contains the column headings
       for (int i = 1; i < storedSched.size(); i++)
       {
          Schedule studentSched = csvRowToScheduleObj(storedSched.get(i));
          Student student = new Student(storedSched.get(i)[1], studentSched);
          
-         //Loop over weekdays and times to find out which students are available
-         //at a given (weekday, time slot) pair
+         // Loop over weekdays and times to find out which students are available
+         // at a given (weekday, time slot) pair
          for (int j = 0; j < Schedule.weekdays.length; j++)
          {
             for (int k = 0; k < Schedule.listOfTimes.length; k++)
@@ -162,14 +166,18 @@ public class AutoSchedule
                if (student.schedule.get(Schedule.weekdays[j], Schedule.listOfTimes[k]) == true)
                {
                   masterSched.get(Schedule.weekdays[j], Schedule.listOfTimes[k]).add(student.getName());
-                  //System.out.println(Schedule.weekdays[j]);
-                  //System.out.println(Schedule.listOfTimes[k]);
-                  //System.out.println(masterSched.get(Schedule.weekdays[j], Schedule.listOfTimes[k]));
                }
 
             }
          }
       }
+      
+      return masterSched;
+   }
+   
+   public static void main(String[] args)
+   {
+      HashMap2D<String, ArrayList<String>> masterSched = fillMasterSched("sample.csv");
 
       for (int i = 0; i < Schedule.weekdays.length; i++)
       {
@@ -181,9 +189,7 @@ public class AutoSchedule
             System.out.println();
          }
       }
-
-      
-      
+   
    }
    
 }
