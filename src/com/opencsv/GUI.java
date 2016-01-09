@@ -24,7 +24,7 @@ public class GUI extends JFrame
    public GUI()
    {
       // set the window title
-      super("AutoSchedule! Yay!");
+      super("AutoSchedule! Written by Albert Yu '15");
       
       // get the content pane so we can add stuff to it
       Container contents = getContentPane();
