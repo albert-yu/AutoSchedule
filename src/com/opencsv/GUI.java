@@ -12,7 +12,7 @@ import java.awt.event.*;
 public class GUI extends JFrame
 {
    private JTextArea textArea = new JTextArea();
-   private JTextField userInputField = new JTextField();
+   private JFileChooser fileChooser = new JFileChooser();
    
    public GUI()
    {
@@ -20,19 +20,42 @@ public class GUI extends JFrame
       super("AutoSchedule! Yay!");
       
       // get the content pane so we can add stuff to it
-      Container content = getContentPane();
+      Container contents = getContentPane();
+      
+      JPanel inputPanel = new JPanel(new GridLayout(3, 1));
+      
+      JButton openButton = new JButton("Open");
+      openButton.addActionListener(new OpenListener());
+      
+      JButton submitButton = new JButton("Submit");
+      submitButton.addActionListener(new SubmitListener());
+      
+      inputPanel.add(openButton);
+      inputPanel.add(textArea);
+      inputPanel.add(submitButton);
+      
+      contents.setLayout(new BorderLayout());
+      contents.add(inputPanel, BorderLayout.SOUTH);
       
       setDefaultCloseOperation(EXIT_ON_CLOSE);
 
       setSize(400, 600);
       setVisible(true);
    }
+   
+   private class OpenListener implements ActionListener
+   {
+      public void actionPerformed(ActionEvent e)
+      {
+         // opens file chooser
+      }
+   }
 
    private class SubmitListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
       {
-         // String input = userInputField.getText() <- contains filename
+         // Interact with file here
       }
    }
 
