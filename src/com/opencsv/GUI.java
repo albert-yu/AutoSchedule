@@ -13,19 +13,18 @@ import java.util.ArrayList;
  * @author Albert Yu
  *
  */
+@SuppressWarnings("serial")
 public class GUI extends JFrame
 {
    private JTextArea guiConsole = new JTextArea();
    private JTextArea userTextArea = new JTextArea();
    private JFileChooser fileChooser = new JFileChooser();
+   private File file;
    
    public GUI()
    {
       // set the window title
       super("AutoSchedule! Yay!");
-      
-      // clear the file chooser if it contains stuff from previous uses
-      fileChooser.setSelectedFile(null);
       
       // get the content pane so we can add stuff to it
       Container contents = getContentPane();
@@ -63,17 +62,28 @@ public class GUI extends JFrame
    {
       public void actionPerformed(ActionEvent e)
       {
-         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-               "CSV Files", "csv");
-         fileChooser.setFileFilter(filter);
+         try
+         {
+            // Customize our file opening dialogue window
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                  "CSV Files", "csv");
+            fileChooser.setFileFilter(filter);
+            fileChooser.setDialogTitle("Open CSV file");
+            
+            // opens file chooser
+            fileChooser.showOpenDialog(getParent());
+            
+            file = fileChooser.getSelectedFile();
+   
+            // prints out pathname
+            userTextArea.setText(null);
+            userTextArea.append(file.getPath());
+         }
          
-         // opens file chooser
-         fileChooser.showOpenDialog(getParent());
-         File file = fileChooser.getSelectedFile();
-
-         // prints out pathname
-         userTextArea.setText(null);
-         userTextArea.append(file.getPath());
+         catch (NullPointerException err)
+         {
+            
+         }
       }
    }
 
@@ -84,8 +94,7 @@ public class GUI extends JFrame
          // Interact with file here
          try
          {
-            File file = fileChooser.getSelectedFile();
-            HashMap2D<String, ArrayList<String>> masterSched = AutoSchedule.fillMasterSched("sample.csv");
+            HashMap2D<String, ArrayList<String>> masterSched = AutoSchedule.fillMasterSched(file.getAbsolutePath());
             for (int i = 0; i < Schedule.weekdays.length; i++)
             {
                guiConsole.append(Schedule.weekdays[i] + ": ");
