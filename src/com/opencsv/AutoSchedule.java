@@ -146,7 +146,7 @@ public class AutoSchedule
     * @param csvFileName
     * @return masterSched, the master schedule
     */
-   private static HashMap2D<String, ArrayList<String>> fillMasterSched(String csvFileName)
+   static HashMap2D<String, ArrayList<String>> fillMasterSched(String csvFileName)
    {
       HashMap2D<String, ArrayList<String>> masterSched = createMasterSched();
       ArrayList<String[]> storedSched = storeSchedule(csvFileName);
