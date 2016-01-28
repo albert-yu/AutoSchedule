@@ -23,11 +23,18 @@ public class AutoSchedule
    private static ArrayList<String> separateByCommas(String str)
    {
       ArrayList<String> separated = new ArrayList<String>();
+      if (str.length() < 4)
+      {
+         separated.add(str);
+         return separated;
+      }
+      
+      StringBuilder strB = new StringBuilder(str);
       StringBuilder currentWord = new StringBuilder();
-      int i =0;
+      int i = 0;
       while (i < str.length() - 1)
       {
-         String temp = new StringBuilder().append(str.charAt(i)).append(str.charAt(i + 1)).toString();
+         String temp = strB.substring(i, i + 2);
          if (temp.equals(", "))
          {
             separated.add(currentWord.toString());
@@ -177,7 +184,7 @@ public class AutoSchedule
    
    public static void main(String[] args)
    {
-      HashMap2D<String, ArrayList<String>> masterSched = fillMasterSched("sample.csv");
+      HashMap2D<String, ArrayList<String>> masterSched = fillMasterSched("MUS246.csv");
 
       for (int i = 0; i < Schedule.weekdays.length; i++)
       {
