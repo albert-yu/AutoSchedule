@@ -104,7 +104,12 @@ public class GUI extends JFrame
                {
                   guiConsole.append("Students available at " + Schedule.listOfTimes[j]);
                   guiConsole.append("\n");
-                  guiConsole.append((masterSched.get(Schedule.weekdays[i], Schedule.listOfTimes[j])).toString());
+                  for (String name : masterSched.get(Schedule.weekdays[i], Schedule.listOfTimes[j]))
+                  {
+                     guiConsole.append(name);
+                     guiConsole.append("\n");
+                  }
+                  
                   guiConsole.append("\n");
                   guiConsole.append("\n");
                }
